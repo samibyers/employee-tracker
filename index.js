@@ -16,19 +16,7 @@ const db = mysql.createConnection(
     console.log(`Connected to the company_db database.`)
 );
 
-// console.table([
-//     {
-//         name: 'foo',
-//         age: 10
-//     },
-//     {
-//         name: 'bar',
-//         age: 20
-//     }
-// ]);
-
-
-
+//Starts the inquirer prompt and creates the main menu
 const startMenu = () => {
     inquirer.prompt([
         {
@@ -65,8 +53,8 @@ const startMenu = () => {
                 break;
         };
     });
-
 };
+//call startMenu to start the inquirer prompt
 startMenu();
 
 //displays the department table

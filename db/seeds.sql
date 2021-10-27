@@ -1,12 +1,12 @@
 INSERT INTO department (name)
-VALUES  ('IT'),
-        ('Accounting'),
-        ('Sales');
+VALUES  ('Gryffindor'),
+        ('Hufflepuff'),
+        ('Ravenclaw');
 
 INSERT INTO role (title, salary, department_id)
-VALUES  ('Engineer', 1.3, 1),
-        ('Engineer', 3.4, 2),
-        ('Engineer', 2.2, 3);
+VALUES  ('The Chosen One', 10, 1),
+        ('The Clever One', 10, 2),
+        ('The Sidekick', 10, 3);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES  ('Harry', 'Potter', 1, 1),

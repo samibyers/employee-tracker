@@ -104,19 +104,14 @@ const addDepartment = () => {
     });
 };
 
-//creates an array of departments to pass into choices
-const departmentsArr = [];
-const chooseDepartment = () => {
+//adds a new role to the role table
+const addRole = () => {
+    // db.query('SELECT * FROM department', (err, results) => {
+    const departmentsArr = [];
     db.query('SELECT name FROM department', (err, results) => {
         for (i = 0; i < results.length; i++) {
         departmentsArr.push(results[i].name);  
-        };
-    });
-};
-
-
-//adds a new role to the role table
-const addRole = () => {
+        };  
     inquirer.prompt([
             {
                 type: 'input',
@@ -132,73 +127,96 @@ const addRole = () => {
                 type: 'list',
                 message: 'Which department does the role belong?',
                 name: 'name',
-                choices: chooseDepartment(),//choose from existing departments
+                choices: departmentsArr,//choose from existing departments
             }, 
         ]).then(({title, salary, name}) => {
-            db.query('INSERT INTO role (title, salary, name) VALUES (?,?,?)', title, salary, name,  (err, results) => {
+            db.query('INSERT INTO role (title, salary, name) VALUES (?,?,?)', [title, salary, name],  (err, results) => {
                 console.log('\n');
                 console.table(results);
                 startMenu();
             });
         });
+    });    
 };
 
 //adds a new employee to the employee table
 const addEmployee = () => {
-    db.query('SELECT * FROM role', (err, results) => {
-        inquirer.prompt([
-            {
-                type: 'input',
-                message: 'Enter the employee\'s first name.',
-                name: 'first_name',
-            }, 
-            {
-                type: 'input',
-                message: 'Enter the employee\'s last name.',
-                name: 'last_name',
-            }, 
-            {
-                type: 'list',
-                message: 'What is the employee\'s role.',
-                name: 'role',
-                choices: results//choose from existing roles
-            }, 
-            {
-                type: 'list',
-                message: 'Who is the employee\'s manager.',
-                name: 'manager',
-                choices: results// choose from existing employees
-            }, 
-        ]).then(({first_name, last_name, role, manager}) => {
-            db.query('INSERT INTO employee (first_name, last_name, role, manager) VALUES (?,?,?,?)', first_name, last_name, role, manager,  (err, results) => {
-                console.log('\n');
-                console.table(results);
-                startMenu();
-            }); 
+    const roleArr = [];
+    const employeeArr = [];
+    db.query('SELECT title FROM role', (err, results) => {
+        for (i = 0; i < results.length; i++) {
+            roleArr.push(results[i].title);  
+        };
+        db.query('SELECT first_name FROM employee', (err, res) => {
+            for (i = 0; i < res.length; i++) {
+                employeeArr.push(res[i].first_name);  
+            };   
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    message: 'Enter the employee\'s first name.',
+                    name: 'first_name',
+                }, 
+                {
+                    type: 'input',
+                    message: 'Enter the employee\'s last name.',
+                    name: 'last_name',
+                }, 
+                {
+                    type: 'list',
+                    message: 'What is the employee\'s role.',
+                    name: 'role',
+                    choices: roleArr,//choose from existing roles
+                }, 
+                {
+                    type: 'list',
+                    message: 'Who is the employee\'s manager.',
+                    name: 'manager',
+                    choices: employeeArr,// choose from existing employees
+                }, 
+            ]).then(({first_name, last_name, role, manager}) => {
+                db.query('INSERT INTO employee (first_name, last_name, role, manager) VALUES (?,?,?,?)', [first_name, last_name, role, manager],  (err, results) => {
+                    console.log('\n');
+                    console.table(results);
+                    startMenu();
+                }); 
+            });
         });
-   });
+    });
 };
 
 //updates an employee's role
 const updateEmployeeRole = () => {
-    inquirer.prompt([
-        {
-            type: 'list',
-            message: 'Select an employee to update:',
-            name: 'name',
-            choices: [], //choose from existing employees... but the names are seaparated...
-        }, 
-        {
-            type: 'list',
-            message: 'Select the employee\'s new role:',
-            name: 'title',
-            choices: [], //choose from existing roles
-        }, 
-    ]).then(({name, title}) => {
-        db.query('INSERT INTO role (title) VALUES (?)', title, (err, results) => {
-            console.log('\n');
-            console.table(results);
-            startMenu();
+    const roleArr = [];
+    const employeeArr = [];
+    db.query('SELECT title FROM role', (err, results) => {
+        for (i = 0; i < results.length; i++) {
+            roleArr.push(results[i].title);  
+        };
+        db.query('SELECT first_name FROM employee', (err, res) => {
+            for (i = 0; i < res.length; i++) {
+                employeeArr.push(res[i].first_name);  
+            }; 
+            inquirer.prompt([
+                {
+                    type: 'list',
+                    message: 'Select an employee to update:',
+                    name: 'name',
+                    choices: employeeArr, //choose from existing employees
+                }, 
+                {
+                    type: 'list',
+                    message: 'Select the employee\'s new role:',
+                    name: 'title',
+                    choices: roleArr, //choose from existing roles
+                }, 
+            ]).then(({name, title}) => {
+                db.query('INSERT INTO role (title) VALUES (?)', title, (err, results) => {
+                    console.log('\n');
+                    console.table(results);
+                    startMenu();
+                });
+            });
         });
     });
 };

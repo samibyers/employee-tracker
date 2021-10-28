@@ -10,7 +10,8 @@
   * [License](#license)
   * [Questions](#questions)
   ## Video
-  The video below demonstrates this application's functionality. 
+  The video below demonstrates this application's functionality:
+  https://watch.screencastify.com/v/CIhErdVJHCLMaMNA3ECr
   ## Installation 
   In order for the application to run, the following must be installed: Node.js, Inquirer, MySQL
   ## Usage 
